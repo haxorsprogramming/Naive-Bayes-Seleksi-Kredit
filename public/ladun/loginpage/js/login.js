@@ -1,82 +1,50 @@
-const urlLoginProses = "login/prosesLogin";
-const awalLogin = true;
-const usernameF = 'txtUsername';
-const passwordF = 'txtPassword';
-const loginApp = '#login-app';
-const titlePage = 'Nadha Laundry (Aplikasi Manajemen Laundry) - Login Page';
+// Route 
+var rToLoginProses = server + "login-proses";
 
-$(document).ready(function(){
-  document.getElementById(usernameF).focus();
-  document.title = titlePage;
-});
+// Vue Object 
+var loginApp = new Vue({
+  el : '#login-app',
+  data : {
 
-var loginForm = new Vue({
-  el: loginApp,
-  data: {
-    userInput: "",
-    passwordInput: "",
-    developer : "Haxorsprogrammingclub"
   },
-  methods: {
-    klikSaya: function() {
-      if (this.userInput === "" || this.passwordInput === "") {
-        isiField();
-      } else {
-        $.post(urlLoginProses,{username: this.userInput, password: this.passwordInput}, function(data){
-            let obj = JSON.parse(data);
-            if (obj.jlh > 0) {
-              suksesLogin();
-            } else {
-              gagalLogin();
-            }
-          }
-        );
+  methods : {
+    loginAtc : function()
+    {
+      let username = document.querySelector('#txtUsername').value;
+      let password = document.querySelector('#txtPassword').value;
+      if(username === ''){
+        pesanUmumApp('warning', 'Isi field!!!', 'Harap isi username ...!');
+      }
+      if(password === ''){
+        pesanUmumApp('warning', 'Isi field!!!', 'Harap isi password ...!');
+      }
+      if(username === '' || password === ''){
+      }else{
+        console.log(rToLoginProses);
+        let dataSend = {'username':username, 'password':password}
+        axios.post(rToLoginProses, dataSend).then(function(res){
+          let dr = res.data;
+          console.log(dr);
+        });
       }
     }
   }
 });
 
-function suksesLogin() {
-  iziToast.info({
-    title: "Sukses",
-    message: "Berhasil login, ke halaman dasbor",
-    position: "topCenter",
-    timeout: 1000,
-    pauseOnHover: false,
-    onClosed: function() {
-      window.location.assign("dasbor");
-    }
-  });
-}
+// Inisialisasi
+$.ajaxSetup({
+  headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+document.querySelector('#txtUsername').focus();
 
-function gagalLogin() {
-  iziToast.error({
-    title: "Gagal",
-    message: "Username / Password salah!!",
-    position: "topCenter",
-    timeout: 1000,
-    pauseOnHover: false,
-    onClosed: function() {
-      clearForm();
-    }
+// Function 
+function pesanUmumApp(icon, title, text)
+{
+  Swal.fire({
+    icon : icon,
+    title : title,
+    text : text
   });
-}
-
-function isiField() {
-  iziToast.warning({
-    title: "Isi Field!!",
-    message: "Masukkan username & Password",
-    position: "topCenter",
-    timeout: 2000,
-    pauseOnHover: false,
-    onClosed: function() {
-      clearForm();
-    }
-  });
-}
-
-function clearForm() {
-  document.getElementById(usernameF).value = "";
-  document.getElementById(passwordF).value = "";
-  document.getElementById(usernameF).focus();
 }

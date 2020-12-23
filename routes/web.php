@@ -14,4 +14,11 @@ use App\Http\Controllers\LoginCtr;
 |
 */
 
+/**
+ * Login page
+ */
 Route::get('/', [LoginCtr::class, 'loginpage']);
+/**
+ * Proses login
+ */
+Route::post('/login-proses', [LoginCtr::class, 'loginproses']);

@@ -16,4 +16,11 @@ class LoginCtr extends Controller
     {
         return view('login.login_page');
     }
+    public function loginproses(Request $request)
+    {
+        $username = $request -> username;
+        $password = $request -> password;
+        $dr = ['status' => 'sukses'];
+        return \Response::json($dr);
+    }
 }
