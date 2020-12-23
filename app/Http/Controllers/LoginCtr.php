@@ -14,6 +14,6 @@ class LoginCtr extends Controller
 {
     public function loginpage()
     {
-        
+        return view('login.login_page');
     }
 }
