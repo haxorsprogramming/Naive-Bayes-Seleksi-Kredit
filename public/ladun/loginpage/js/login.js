@@ -20,11 +20,16 @@ var loginApp = new Vue({
       }
       if(username === '' || password === ''){
       }else{
-        console.log(rToLoginProses);
         let dataSend = {'username':username, 'password':password}
         axios.post(rToLoginProses, dataSend).then(function(res){
           let dr = res.data;
-          console.log(dr);
+          if(dr.status === 'error_password'){
+            pesanUmumApp('warning', 'Error', 'Username / password salah ..');
+          }else if(dr.status === 'no_username'){
+            pesanUmumApp('warning', 'Error', 'Tidak ada username yg terdaftar, coba cek kembali ..');
+          }else{
+            console.log("sukses");
+          }
         });
       }
     }

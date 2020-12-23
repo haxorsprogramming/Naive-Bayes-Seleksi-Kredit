@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 /**
  * Import model
  */
-
+use App\Models\UserMdl;
 
 class LoginCtr extends Controller
 {
@@ -20,7 +20,20 @@ class LoginCtr extends Controller
     {
         $username = $request -> username;
         $password = $request -> password;
-        $dr = ['status' => 'sukses'];
+        $jlhUsername = UserMdl::where('username', $username) -> count();
+        if($jlhUsername < 1){
+            $dr = ['status' => 'no_username'];
+        }else{
+            $dataUser = UserMdl::where('username', $username) -> first();
+            $passwordUserDb = $dataUser -> password;
+            $cekPassword = password_verify($password, $passwordUserDb);
+            if($cekPassword == true){
+                session(['userLogin' => $username]);
+                $dr = ['status' => 'success'];
+            }else{
+                $dr = ['status' => 'error_password'];
+            }
+        }
         return \Response::json($dr);
     }
 }
